@@ -45,6 +45,17 @@ async function run(){
             const cursor=myOrderCollection.find({});
             const myOrder=await cursor.toArray();
             res.send(myOrder);
+        });
+
+        //tour post api
+        app.post('/addedTour',(req,res)=>{
+            const newTour=req.body;
+            console.log('adding some',newTour)
+             myOrderCollection.insertOne(newTour).then((result)=>{
+                 console.log('insertedCount',result.insertedCount);
+                 res.send(result.insertedCount>0);
+             });
+            // console.log(result);
         })
 
         
