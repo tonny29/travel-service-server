@@ -51,7 +51,7 @@ async function run(){
         app.post('/addedTour',(req,res)=>{
             const newTour=req.body;
             console.log('adding some',newTour)
-             myOrderCollection.insertOne(newTour).then((result)=>{
+            databaseCollection.insertOne(newTour).then((result)=>{
                  console.log('insertedCount',result.insertedCount);
                  res.send(result.insertedCount>0);
              });
