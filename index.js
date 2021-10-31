@@ -6,7 +6,7 @@ require('dotenv').config()
 const app=express();
 app.use(cors());
 app.use(express.json())
-const port=process.env.PORT || 5000
+const port=process.env.PORT || 7000;
 
 
 
@@ -18,6 +18,35 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         await client.connect();
+        const database=client.db('bookingTour');
+        const databaseCollection=database.collection('tour');
+        const myOrderCollection=database.collection('myOrder');
+        // console.log('database coonnected')
+
+        
+        //GET API\\
+        app.get('/tour',async(req,res)=>{
+            const cursor=databaseCollection.find({});
+            const tourAll=await cursor.toArray();
+            res.send(tourAll);
+            console.log(tourAll);
+        })
+
+        //POST api\\
+        app.post('/myOrder',async(req,res)=>{
+            const myOrder=req.body;
+            console.log('hit the post api',myOrder);
+            const result=await myOrderCollection.insertOne(myOrder);
+            console.log(result);
+            res.json(result);
+        });
+        
+        app.get('/myOrder',async(req,res)=>{
+            const cursor=myOrderCollection.find({});
+            const myOrder=await cursor.toArray();
+            res.send(myOrder);
+        })
+
         
     }
     finally{
@@ -30,7 +59,7 @@ run().catch(console.dir)
 
 
 app.get('/',(req,res)=>{
-    res.send('this is project')
+    res.send('this is project all of this')
 })
 
 app.listen(port,()=>{
